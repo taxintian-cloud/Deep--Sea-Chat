@@ -1,0 +1,322 @@
+/* ================================
+   Deep Sea Chat – 完全統合版 CSS
+================================ */
+
+/* 深海グラデーション背景 */
+body {
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(to bottom, #003a5c, #001a33 70%);
+    font-family: "Noto Sans JP", sans-serif;
+    color: #e8f7ff;
+    overflow: hidden;
+}
+
+/* アクセシビリティ用（非表示） */
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* バブル背景レイヤー */
+.bubble-layer {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    will-change: transform;
+}
+
+.layer1 {
+    background: radial-gradient(circle at 20% 80%, rgba(255,255,255,0.15), transparent 40%);
+    animation: float1 18s infinite ease-in-out;
+}
+
+.layer2 {
+    background: radial-gradient(circle at 70% 20%, rgba(255,255,255,0.12), transparent 40%);
+    animation: float2 22s infinite ease-in-out;
+}
+
+.layer3 {
+    background: radial-gradient(circle at 40% 50%, rgba(255,255,255,0.10), transparent 40%);
+    animation: float3 26s infinite ease-in-out;
+}
+
+@keyframes float1 { 0% { transform: translateY(40px); } 100% { transform: translateY(-80px); } }
+@keyframes float2 { 0% { transform: translateY(60px); } 100% { transform: translateY(-100px); } }
+@keyframes float3 { 0% { transform: translateY(50px); } 100% { transform: translateY(-90px); } }
+
+/* 全体レイアウト */
+.chat-app {
+    display: flex;
+    height: 100vh;
+    position: relative;
+    z-index: 2;
+}
+
+/* 左：サイドバー */
+.sidebar {
+    width: 260px;
+    background: rgba(255,255,255,0.06);
+    backdrop-filter: blur(12px);
+    border-right: 1px solid rgba(255,255,255,0.1);
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+/* 真珠オーブ */
+.orb-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.orb {
+    position: relative;
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, #ffffff, #a8eaff 40%, #005f99 90%);
+    box-shadow:
+        0 0 20px rgba(0, 200, 255, 0.4),
+        inset 0 0 20px rgba(255, 255, 255, 0.6);
+    animation: orbPulse 4s ease-in-out infinite,
+               orbGlow 6s ease-in-out infinite;
+}
+
+@keyframes orbPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.06); }
+}
+
+@keyframes orbGlow {
+    0%, 100% {
+        box-shadow:
+            0 0 20px rgba(0, 200, 255, 0.4),
+            inset 0 0 20px rgba(255, 255, 255, 0.6);
+    }
+    50% {
+        box-shadow:
+            0 0 40px rgba(0, 200, 255, 0.7),
+            inset 0 0 30px rgba(255, 255, 255, 0.8);
+    }
+}
+
+/* 会話時の光 */
+.orb.active {
+    animation: orbSpeak 1.2s ease;
+}
+
+@keyframes orbSpeak {
+    0% { transform: scale(1); box-shadow: 0 0 20px rgba(0,200,255,0.4); }
+    50% { transform: scale(1.12); box-shadow: 0 0 60px rgba(0,200,255,0.9); }
+    100% { transform: scale(1); box-shadow: 0 0 20px rgba(0,200,255,0.4); }
+}
+
+/* 波紋エフェクト */
+.orb::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: radial-gradient(
+        circle,
+        rgba(0, 200, 255, 0.4) 0%,
+        rgba(0, 200, 255, 0.15) 40%,
+        rgba(0, 200, 255, 0) 70%
+    );
+    opacity: 0;
+    transform: scale(0.6);
+    pointer-events: none;
+}
+
+.orb.ripple::after {
+    animation: rippleWave 1.2s ease-out;
+}
+
+@keyframes rippleWave {
+    0% { opacity: 0.6; transform: scale(0.6); filter: blur(2px); }
+    70% { opacity: 0.25; transform: scale(1.6); filter: blur(4px); }
+    100% { opacity: 0; transform: scale(2.2); filter: blur(6px); }
+}
+
+/* typing 中の淡い点滅 */
+.orb.typing-glow {
+    animation: orbTyping 1.2s infinite ease-in-out;
+}
+
+@keyframes orbTyping {
+    0%   { box-shadow: 0 0 20px rgba(0,200,255,0.3); }
+    50%  { box-shadow: 0 0 40px rgba(0,200,255,0.6); }
+    100% { box-shadow: 0 0 20px rgba(0,200,255,0.3); }
+}
+
+/* スレッド一覧 */
+.chat-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    overflow-y: auto;
+    flex: 1;
+}
+
+.chat-list:empty {
+    padding-top: 8px;
+}
+
+.chat-list li {
+    padding: 10px;
+    margin-bottom: 8px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.chat-list li:hover {
+    background: rgba(255,255,255,0.15);
+}
+
+.active-thread {
+    background: rgba(80,180,255,0.25) !important;
+    border-left: 3px solid #4dd0ff;
+}
+
+.thread-delete {
+    float: right;
+    color: #ff6b6b;
+    cursor: pointer;
+    margin-left: 8px;
+    transition: 0.2s;
+}
+
+.thread-delete:hover {
+    transform: scale(1.2);
+}
+
+.thread-edit-input {
+    width: 100%;
+    padding: 6px;
+    border-radius: 6px;
+    border: none;
+    outline: none;
+    background: rgba(255,255,255,0.15);
+    color: #e8f7ff;
+}
+
+/* 右：チャット画面 */
+.chat-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 16px;
+}
+
+.chat-main h1 {
+    margin: 0;
+}
+
+.messages {
+    flex: 1;
+    overflow-y: auto;
+    padding-right: 6px;
+}
+
+/* メッセージバブル */
+.message {
+    max-width: 70%;
+    padding: 10px 14px;
+    margin-bottom: 12px;
+    border-radius: 12px;
+    background: rgba(255,255,255,0.12);
+    backdrop-filter: blur(6px);
+}
+
+/* ユーザー側 */
+.message.user {
+    margin-left: auto;
+    background: rgba(80,180,255,0.25);
+    animation: waveUser 0.6s ease-out;
+}
+
+/* AI側 */
+.message.ai {
+    background: rgba(0, 180, 255, 0.18);
+    border-left: 3px solid #4dd0ff;
+    box-shadow: 0 0 12px rgba(0, 180, 255, 0.4);
+    animation: waveAI 0.6s ease-out;
+}
+
+@keyframes waveAI {
+    0% { opacity: 0; transform: translateX(-40px) translateY(6px); filter: blur(4px); }
+    60% { opacity: 1; transform: translateX(4px) translateY(0); filter: blur(0); }
+    100% { transform: translateX(0); }
+}
+
+@keyframes waveUser {
+    0% { opacity: 0; transform: translateX(40px) translateY(6px); filter: blur(4px); }
+    60% { opacity: 1; transform: translateX(-4px) translateY(0); filter: blur(0); }
+    100% { transform: translateX(0); }
+}
+
+/* typing バブル */
+.typing {
+    max-width: 60%;
+    padding: 10px 14px;
+    margin-bottom: 12px;
+    border-radius: 12px;
+    background: rgba(0, 180, 255, 0.12);
+    backdrop-filter: blur(6px);
+    color: #aeeaff;
+    font-size: 18px;
+    letter-spacing: 2px;
+    animation: typingWave 1.2s infinite ease-in-out;
+}
+
+@keyframes typingWave {
+    0%   { opacity: 0.4; transform: translateX(-4px); }
+    50%  { opacity: 1;   transform: translateX(4px); }
+    100% { opacity: 0.4; transform: translateX(-4px); }
+}
+
+/* 入力欄 */
+.input-area {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+#chat-input {
+    flex: 1;
+    padding: 12px;
+    border-radius: 10px;
+    border: none;
+    outline: none;
+    background: rgba(255,255,255,0.12);
+    color: #e8f7ff;
+}
+
+#send-btn {
+    padding: 12px 18px;
+    border: none;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #00c6ff, #0072ff);
+    color: white;
+    cursor: pointer;
+}
+
+/* フォーカスリング */
+button:focus-visible,
+input:focus-visible {
+    outline: 2px solid rgba(0, 200, 255, 0.8);
+    outline-offset: 3px;
+}

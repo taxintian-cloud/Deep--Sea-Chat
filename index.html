@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ja-JP">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Deep Sea Chat</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+
+  <!-- 深海バブル背景レイヤー -->
+  <div class="bubble-layer layer1" aria-hidden="true"></div>
+  <div class="bubble-layer layer2" aria-hidden="true"></div>
+  <div class="bubble-layer layer3" aria-hidden="true"></div>
+
+  <!-- アプリ全体 -->
+  <div class="chat-app">
+
+    <!-- 左サイドバー -->
+    <aside class="sidebar">
+
+      <!-- 真珠オーブ -->
+      <div class="orb-container">
+        <div class="orb" id="orb"></div>
+      </div>
+
+      <button id="new-chat" class="new-chat-btn" type="button">＋ 新しい会話</button>
+
+      <!-- スレッド一覧 -->
+      <ul class="chat-list" id="chatList"></ul>
+
+    </aside>
+
+    <!-- 右メインチャット -->
+    <main class="chat-main">
+      <h1 class="visually-hidden">Deep Sea Chat</h1>
+
+      <!-- メッセージログ -->
+      <div class="messages" id="messages"></div>
+
+      <!-- 入力エリア -->
+      <div class="input-area">
+        <input
+          type="text"
+          id="chat-input"
+          placeholder="深海に言葉を投げる…"
+          autocomplete="off"
+        />
+        <button id="send-btn" type="button">送信</button>
+      </div>
+
+    </main>
+
+  </div>
+
+  <script src="script.js" defer></script>
+</body>
+</html>
